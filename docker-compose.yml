@@ -1,0 +1,32 @@
+version: "3.2"
+services:
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: 'rabbitmq'
+    ports:
+        - 5672:5672
+        - 15672:15672
+    volumes:
+        - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
+        - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
+    networks:
+        - rabbitmq_go_net
+  mysql_db:
+    image: "mysql:8.0"
+    restart: always
+    ports:
+      - 3306:3306
+    user: root
+    environment:
+      MYSQL_DATABASE: bootcamp
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - bootcampvol:/var/lib/mysql
+    networks:
+        - rabbitmq_go_net
+volumes:
+  bootcampvol:
+networks:
+  rabbitmq_go_net:
+    driver: bridge
